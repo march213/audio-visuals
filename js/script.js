@@ -2,9 +2,9 @@ console.clear()
 
 let audio
 let fft
-let bins = 1024
-let binWidth
-
+let peakDetect
+const bins = 64
+let bgColor = 0
 
 function preload() {
   audio = loadSound('audio/4.mp3')
@@ -13,20 +13,22 @@ function preload() {
 function setup() {
   const canvas = createCanvas(windowWidth, windowHeight)
   canvas.mouseClicked(togglePlay)
-  fft = new p5.FFT(0, bins)
-  binWidth = width / bins
+  fft = new p5.FFT()
+  peakDetect = new p5.PeakDetect(400, 2600, 0.1);
+  peakDetect.onPeak(peakDetected)
+
 }
 
 function draw() {
-  background(0)
+  background(bgColor)
   noStroke();
 
-  const spectrum = fft.analyze()
+  fft.analyze(bins)
+  peakDetect.update(fft);
+}
 
-  for (let i = 0; i < spectrum.length; i++) {
-    const y = map(spectrum[i], 0, 255, height, 0)
-    rect(i * binWidth, y, binWidth, height - y)
-  }
+function peakDetected() {
+  bgColor = color(random(255), random(255), random(255))
 }
 
 function togglePlay() {
