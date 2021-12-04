@@ -8,5 +8,7 @@ function setup() {
   shader(shaders)
 }
 function draw() {
-  rect(0, 0, width, height)
+  background(0)
+  shaders.setUniform('uFrameCount', frameCount)
+  sphere(width / 4, 200, 200)
 }
