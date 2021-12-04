@@ -41,7 +41,7 @@ function setup() {
   amp = new p5.Amplitude()
   fft = new p5.FFT()
 
-  beatDetect = new p5.PeakDetect(30, 2000, 0.55)
+  beatDetect = new p5.PeakDetect(20, 2000, 0.5)
   beatDetect.onPeak(triggerBeat)
 
   shader(shaders)
@@ -56,7 +56,7 @@ function draw() {
   let frequency = fft.getCentroid()
   frequency *= 0.001
 
-  const mapFreq = map(fft.getEnergy('mid'), 0, 100, 0, 0.1)
+  const mapFreq = map(fft.getEnergy('mid'), 0, 50, 0, 0.1)
   const mapCentroid = map(frequency, 0, 5, -1, 0.5)
 
   shaders.setUniform('uTime', frameCount)
