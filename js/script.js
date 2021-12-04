@@ -29,5 +29,5 @@ function draw() {
   shaders.setUniform('uFrequency', mapF)
   shaders.setUniform('uAmplitude', mapA)
 
-  sphere(width / 4, 200, 200)
+  sphere(width / 6, 200, 200)
 }
