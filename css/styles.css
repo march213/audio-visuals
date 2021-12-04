@@ -18,6 +18,8 @@ body {
   line-height: 0.8;
   mix-blend-mode: difference;
   pointer-events: none;
+  font-weight: bold;
+  letter-spacing: 0.07em;
 }
 
 span {

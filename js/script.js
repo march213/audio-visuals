@@ -1,58 +1,77 @@
-let shaders, audio, amplitude, fft
+let myShaders,
+  audio,
+  amp,
+  fft,
+  beatDetect,
+  bgColor = 0
 
 let words = [
-  'melt',
-  'fear',
-  'bounce',
-  'rabid',
-  'fuzzy',
-  'gratis',
-  'sense',
-  'madly',
-  'yellow',
-  'crazy',
-  'ahead',
-  'super',
-  'classy',
-  'craven',
-  'sassy',
-  'roomy',
-  'sedate',
+  'real',
+  'hear',
+  'bite',
+  'dash',
+  'arm',
+  'code',
+  'TRUE',
+  'girl',
+  'sun',
+  'tick',
+  'lift',
+  'dare',
+  'poll',
+  'soap',
+  'game',
+  'acid',
+  'rest',
   'gaudy',
-  'moldy',
-  'groovy',
+  'fall',
+  'kick',
 ]
+
+const texts = [...document.querySelectorAll('.text span')]
 
 function preload() {
   shaders = loadShader('../shaders/vertext.vert', '../shaders/fragment.frag')
-  audio = loadSound('../audio/2.mp3')
+  audio = loadSound('../audio/1.mp3')
 }
+
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL)
-  shader(shaders)
 
   amp = new p5.Amplitude()
   fft = new p5.FFT()
 
-  audio.play()
+  beatDetect = new p5.PeakDetect(30, 2000, 0.55)
+  beatDetect.onPeak(triggerBeat)
+
+  shader(shaders)
 }
+
 function draw() {
   background(0)
 
   fft.analyze()
-  const volume = amp.getLevel() // 0 - 1
-  // const frequency = fft.getEnergy('mid') // 0 - 255
+  beatDetect.update(fft)
+
   let frequency = fft.getCentroid()
   frequency *= 0.001
 
-  const mapF = map(frequency, 0, 10, 0, 40)
-  const mapA = map(volume, 0, 0.2, 0, 1.13)
+  const mapFreq = map(fft.getEnergy('mid'), 0, 100, 0, 0.1)
+  const mapCentroid = map(frequency, 0, 5, -1, 0.5)
 
   shaders.setUniform('uTime', frameCount)
-  shaders.setUniform('uFrequency', mapF)
-  shaders.setUniform('uAmplitude', mapA)
+  shaders.setUniform('uFrequency', mapFreq)
+  shaders.setUniform('uAmplitude', mapCentroid)
 
   sphere(width / 6, 200, 200)
+}
+
+function triggerBeat() {
+  texts.forEach((el, i) => {
+    setTimeout(() => {
+      el.innerHTML = random(words)
+    }, random(200) * i)
+  })
 }
 
 function mousePressed() {
@@ -66,4 +85,8 @@ function mousePressed() {
       audio.play()
     }
   }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight)
 }
