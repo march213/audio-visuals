@@ -1,45 +1,41 @@
-console.clear()
+console.clear();
 
-let audio
-let fft
-let peakDetect
-const bins = 64
-let bgColor = 0
+let audio;
+let fft;
+let peakDetect;
+const bins = 64;
+let bgColor = 0;
 
 function preload() {
-  audio = loadSound('audio/4.mp3')
+  audio = loadSound('audio/4.mp3');
 }
 
 function setup() {
-  const canvas = createCanvas(windowWidth, windowHeight)
-  canvas.mouseClicked(togglePlay)
-  fft = new p5.FFT()
+  const canvas = createCanvas(windowWidth, windowHeight);
+  canvas.mouseClicked(togglePlay);
+  fft = new p5.FFT();
   peakDetect = new p5.PeakDetect(400, 2600, 0.1);
-  peakDetect.onPeak(peakDetected)
-
+  peakDetect.onPeak(peakDetected);
 }
 
 function draw() {
-  background(bgColor)
+  background(bgColor);
   noStroke();
 
-  fft.analyze(bins)
+  fft.analyze(bins);
   peakDetect.update(fft);
 }
 
 function peakDetected() {
-  bgColor = color(random(255), random(255), random(255))
+  bgColor = color(random(255), random(255), random(255));
 }
 
 function togglePlay() {
   if (audio.isPlaying()) {
-    audio.pause()
+    audio.pause();
   } else {
-    audio.loop()
+    audio.loop();
   }
 }
 
-function windowResized() {
-
-}
-
+function windowResized() {}
